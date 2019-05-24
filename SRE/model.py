@@ -7,4 +7,4 @@ class Model(object):
             model = KeyedVectors.load_word2vec_format(fileModel, binary=binary)
         else:
             model = Word2Vec.load(fileModel)
-        self.model = model
+        self.__model__ = model
