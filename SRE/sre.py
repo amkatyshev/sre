@@ -4,9 +4,10 @@ from conllu import parse_tree
 from SRE import Model as SREM
 import os
 
+MODULE_DIR = os.path.dirname(__file__)
 
 class SRE(object):
-    def __init__(self, udmodel, encoding='utf8'):
+    def __init__(self, udmodel=MODULE_DIR+'/russian.udpipe', srmodel=MODULE_DIR+'/ruwiki/wiki.model', encoding='utf8'):
         self.__udmodel__ = Model.load(udmodel)
         self.__pipeline__ = Pipeline(self.__udmodel__, 'horizontal', Pipeline.DEFAULT, Pipeline.DEFAULT, 'conllu')
         self.__log__ = open('log.txt', 'w', encoding=encoding)
