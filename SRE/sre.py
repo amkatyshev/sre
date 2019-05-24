@@ -15,7 +15,7 @@ class SRE(object):
         self.__srem__ = SREM(srmodel)
 
     def __getSimilarWords__(self, word, count):
-        wordlist = self.__srem__.__model__.wv.most_similar(word, topn=50)
+        wordlist = self.__srem__.__mostSimilar__(word, topn=50)
         main_word = self.__morph__.parse(word)[0]
         final_words = [main_word.normal_form]
         for word in wordlist:
