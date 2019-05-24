@@ -8,3 +8,6 @@ class Model(object):
         else:
             model = Word2Vec.load(fileModel)
         self.__model__ = model
+
+    def __mostSimilar__(self, word, topn=10):
+        return self.__model__.wv.most_similar(word, topn=topn)
