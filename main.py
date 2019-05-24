@@ -7,7 +7,7 @@ from SRE import SRE
 
 start_time = time.time()
 
-sre = SRE('russian-syntagrus-ud-2.3-181115.udpipe')
+sre = SRE()
 sre.analyze('eloquentJS_ru.txt')
 
 
