@@ -2,7 +2,7 @@ from gensim.models import Word2Vec, KeyedVectors
 from pymorphy2 import MorphAnalyzer
 
 
-class Model(object):
+class WordModel(object):
     def __init__(self, fileModel, isVector=False, binary=False):
         self.__morph__ = MorphAnalyzer()
         if isVector:

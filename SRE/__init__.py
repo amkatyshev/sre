@@ -1,2 +1,2 @@
-from .model import Model
+from .model import WordModel
 from .sre import SRE

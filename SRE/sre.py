@@ -1,17 +1,17 @@
 from ufal.udpipe import Model, Pipeline, ProcessingError
 from conllu import parse_tree
-from SRE import Model as SREM
+from SRE import WordModel
 import os
 
 MODULE_DIR = os.path.dirname(__file__)
 
 
 class SRE(object):
-    def __init__(self, udmodel=MODULE_DIR+'/russian.udpipe', srmodel=MODULE_DIR+'/ruwiki/wiki.model', encoding='utf8'):
-        self.__udmodel__ = Model.load(udmodel)
+    def __init__(self, udModel=MODULE_DIR+'/russian.udpipe', wordModel=MODULE_DIR+'/ruwiki/wiki.model', encoding='utf8'):
+        self.__udmodel__ = Model.load(udModel)
         self.__pipeline__ = Pipeline(self.__udmodel__, 'horizontal', Pipeline.DEFAULT, Pipeline.DEFAULT, 'conllu')
         self.__log__ = open('log.txt', 'w', encoding=encoding)
-        self.__srem__ = SREM(srmodel)
+        self.__srem__ = WordModel(wordModel)
 
     def __evalTreeSentence__(self, sentenceRoot, indexSentence):
         logstr = '[sentence ' + str(indexSentence) + '] '
