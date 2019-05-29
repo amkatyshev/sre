@@ -50,7 +50,7 @@ class SRE(object):
             except Exception as e:
                 self.__log__.write(logstr + ' error [' + str(e) + ']\n')
         # если главная часть - глагол "являться" или похожий на него
-        elif upt_root == 'VERB' and sentenceRoot.token['lemma'] in self.__srem__.getSimilarWords('являться', 5):
+        elif upt_root == 'VERB' and sentenceRoot.token['lemma'] in self.__srem__.getSimilarWords(['являться', 'называться'], 10):
             try:
                 subjs = [_ for _ in sentenceRoot.children if
                          _.token['deprel'] == 'nsubj' and _.token['upostag'] == 'NOUN']

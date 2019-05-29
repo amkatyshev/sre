@@ -10,16 +10,30 @@ class WordModel(object):
         else:
             model = Word2Vec.load(fileModel)
         self.__model__ = model
+        self.__cache__ = []
 
     def __mostSimilar__(self, words, topn=10):
         return self.__model__.wv.most_similar(words, topn=topn)
 
-    def getSimilarWords(self, word, count):
-        wordlist = self.__mostSimilar__(word, topn=50)
-        main_word = self.__morph__.parse(word)[0]
-        final_words = [main_word.normal_form]
-        for word in wordlist:
-            word_parse = self.__morph__.parse(word[0])[0]
-            if 'VERB' in main_word.tag and word_parse.normal_form != main_word.normal_form and main_word.tag.person == word_parse.tag.person:
-                final_words.append(self.__morph__.parse(word[0])[0].normal_form)
-        return final_words[:count + 1]
+    def __findWordInCache__(self, word):
+        for wordCache in self.__cache__:
+            if wordCache[0] == word:
+                return wordCache
+        return False
+
+    def getSimilarWords(self, words, count=10, grammems={'INFN'}):
+        wordInCache = self.__findWordInCache__(words)
+        if wordInCache == False:
+            wordlist = self.__mostSimilar__(words, topn=count * 10)
+            finalWords = []
+            for wordInList in wordlist:
+                if len(finalWords) < count:
+                    word_parse = self.__morph__.parse(wordInList[0])[0]
+                    inflect = word_parse.inflect(grammems)
+                    if inflect.word not in finalWords:
+                        finalWords.append(inflect.word)
+            finalWords.extend(words)
+            self.__cache__.append((words, finalWords))
+            return finalWords
+        else:
+            return wordInCache[1]
