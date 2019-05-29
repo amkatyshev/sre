@@ -1,28 +1,17 @@
 from ufal.udpipe import Model, Pipeline, ProcessingError
-from pymorphy2 import MorphAnalyzer
 from conllu import parse_tree
 from SRE import Model as SREM
 import os
 
 MODULE_DIR = os.path.dirname(__file__)
 
+
 class SRE(object):
     def __init__(self, udmodel=MODULE_DIR+'/russian.udpipe', srmodel=MODULE_DIR+'/ruwiki/wiki.model', encoding='utf8'):
         self.__udmodel__ = Model.load(udmodel)
         self.__pipeline__ = Pipeline(self.__udmodel__, 'horizontal', Pipeline.DEFAULT, Pipeline.DEFAULT, 'conllu')
         self.__log__ = open('log.txt', 'w', encoding=encoding)
-        self.__morph__ = MorphAnalyzer()
         self.__srem__ = SREM(srmodel)
-
-    def __getSimilarWords__(self, word, count):
-        wordlist = self.__srem__.__mostSimilar__(word, topn=50)
-        main_word = self.__morph__.parse(word)[0]
-        final_words = [main_word.normal_form]
-        for word in wordlist:
-            word_parse = self.__morph__.parse(word[0])[0]
-            if 'VERB' in main_word.tag and word_parse.normal_form != main_word.normal_form and main_word.tag.person == word_parse.tag.person:
-                final_words.append(self.__morph__.parse(word[0])[0].normal_form)
-        return final_words[:count+1]
 
     def __evalTreeSentence__(self, sentenceRoot, indexSentence):
         logstr = '[sentence ' + str(indexSentence) + '] '
@@ -61,7 +50,7 @@ class SRE(object):
             except Exception as e:
                 self.__log__.write(logstr + ' error [' + str(e) + ']\n')
         # если главная часть - глагол "являться" или похожий на него
-        elif upt_root == 'VERB' and sentenceRoot.token['lemma'] in self.__getSimilarWords__('являться', 5):
+        elif upt_root == 'VERB' and sentenceRoot.token['lemma'] in self.__srem__.getSimilarWords('являться', 5):
             try:
                 subjs = [_ for _ in sentenceRoot.children if
                          _.token['deprel'] == 'nsubj' and _.token['upostag'] == 'NOUN']
