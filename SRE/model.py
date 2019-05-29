@@ -11,8 +11,8 @@ class WordModel(object):
             model = Word2Vec.load(fileModel)
         self.__model__ = model
 
-    def __mostSimilar__(self, word, topn=10):
-        return self.__model__.wv.most_similar(word, topn=topn)
+    def __mostSimilar__(self, words, topn=10):
+        return self.__model__.wv.most_similar(words, topn=topn)
 
     def getSimilarWords(self, word, count):
         wordlist = self.__mostSimilar__(word, topn=50)
