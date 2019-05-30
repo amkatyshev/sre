@@ -18,15 +18,9 @@ class PartOfParser(AbstractTemplateParser):
                 # ... вместе с другими перечислениями
                 concept2.extend([_ for _ in concept2[0].children if _.token['deprel'] == 'conj'])
             for c1 in concept1:
-                fullConcept1 = c1.token['lemma']
-                fullConcept1Mod = [_ for _ in c1.children if _.token['deprel'] == 'nmod']
-                if len(fullConcept1Mod) > 0:
-                    fullConcept1 += ' ' + fullConcept1Mod[0].token['form']
+                fullConcept1 = self.__getFullConcept__(c1)
                 for c2 in concept2:
-                    fullConcept2 = c2.token['lemma']
-                    fullConcept2Mod = [_ for _ in c2.children if _.token['deprel'] == 'nmod']
-                    if len(fullConcept2Mod) > 0:
-                        fullConcept2 += ' ' + fullConcept2Mod[0].token['form']
+                    fullConcept2 = self.__getFullConcept__(c1)
                     FileWriter.toFile('PART-OF: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
 
         elif sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
