@@ -7,7 +7,7 @@ from gensim.models.word2vec import LineSentence
 from tqdm import tqdm
 from pymorphy2 import MorphAnalyzer
 from pprint import pprint
-from SRE import Model
+from SRE import WordModel
 
 
 def getWikiTexts(input_wikidata, output_wikitext='wiki.txt'):
@@ -59,14 +59,14 @@ def getVectors(filevectors):
 
 if __name__ == '__main__':
     morph = MorphAnalyzer()
-    model = Model('wiki_new/wiki.model')
-    wordlist = model.model.wv.most_similar('является', topn=40)
+    model = WordModel('ruwiki/wiki.model')
+    wordlist = model.__model__.wv.most_similar('является', topn=50)
     main_word = morph.parse('является')[0]
-    final_words = []
+    final_words = [main_word.normal_form]
     for word in wordlist:
         word_parse = morph.parse(word[0])[0]
         if 'VERB' in main_word.tag and word_parse.normal_form != main_word.normal_form and main_word.tag.person == word_parse.tag.person:
-            final_words.append(word)
-    pprint(final_words)
+            final_words.append(morph.parse(word[0])[0].normal_form)
+    pprint(final_words[:5])
 
 
