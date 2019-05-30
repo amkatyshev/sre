@@ -24,18 +24,17 @@ class WordModel(object):
     def getModel(self):
         return self.__model__
 
-    def getSimilarWords(self, words, count=10, grammems={'INFN'}):
+    def getSimilarWords(self, words, grammems, count=10):
         wordInCache = self.__findWordInCache__(words)
         if wordInCache == False:
             wordlist = self.__mostSimilar__(words, topn=count * 10)
-            finalWords = []
+            finalWords = words.copy()
             for wordInList in wordlist:
-                if len(finalWords) < count:
+                if len(finalWords) < count + len(words):
                     word_parse = self.__morph__.parse(wordInList[0])[0]
                     inflect = word_parse.inflect(grammems)
-                    if inflect.word not in finalWords:
+                    if inflect is not None and inflect.normal_form not in finalWords:
                         finalWords.append(inflect.word)
-            finalWords.extend(words)
             self.__cache__.append((words, finalWords))
             return finalWords
         else:
