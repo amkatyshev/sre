@@ -8,33 +8,25 @@ class IsAParser(AbstractTemplateParser):
         if sentence.token['upostag'] == 'NOUN' and sentence.token['lemma'] != 'часть':
             try:
                 # главная часть - существительное nsubj
-                subjs = [_ for _ in sentence.children if
-                         _.token['deprel'] == 'nsubj' and _.token['upostag'] == 'NOUN']
-                if len(subjs) > 0:
+                concept1 = self.__getChildrenByToken__(sentence, {'deprel': 'nsubj'})
+                if concept1:
                     # ... вместе с другими перечислениями
-                    subjs.extend([_ for _ in subjs[0].children if
-                                  _.token['deprel'] == 'conj' and subjs[0].token['upostag'] == _.token[
-                                      'upostag']])
+                    concept1.extend(self.__getChildrenByToken__(concept1[0], {'deprel': 'conj'}))
                 # ... добавляем перечисления к корню
-                rootsubjs = [sentence] + [_ for _ in sentence.children if
-                                              _.token['deprel'] == 'conj' and _.token['upostag'] == 'NOUN']
+                concept2 = [sentence] + self.__getChildrenByToken__(sentence, {'deprel': 'conj'})
 
                 # добавляем зависимости от главных существительных в виде существительных в родительном падеже
-                for s in subjs:
-                    for rs in rootsubjs:
-                        smods = [_ for _ in s.children if
-                                 _.token['deprel'] == 'nmod' and _.token['upostag'] == 'NOUN' and
-                                 _.token['feats']['Case'] == 'Gen']
-                        slemma = s.token['lemma']
-                        if len(smods) > 0:
-                            slemma += ' ' + smods[0].token['form']
-                        rsmods = [_ for _ in rs.children if
-                                  _.token['deprel'] == 'nmod' and _.token['upostag'] == 'NOUN' and
-                                  _.token['feats']['Case'] == 'Gen']
-                        rslemma = rs.token['lemma']
-                        if len(rsmods) > 0:
-                            rslemma += ' ' + rsmods[0].token['form']
-                        FileWriter.toFile('IS-A: ' + slemma + '<->' + rslemma, 'log.txt')
+                for c1 in concept1:
+                    for c2 in concept2:
+                        fullConcept1 = c1.token['lemma']
+                        fullConcept1Mod = self.__getChildrenByToken__(c1, {'deprel': 'nmod'})
+                        if fullConcept1Mod:
+                            fullConcept1 += ' ' + fullConcept1Mod[0].token['form']
+                        fullConcept2 = c2.token['lemma']
+                        fullConcept2Mod = self.__getChildrenByToken__(c2, {'deprel': 'nmod'})
+                        if fullConcept2Mod:
+                            fullConcept2 += ' ' + fullConcept2Mod[0].token['form']
+                        FileWriter.toFile('IS-A: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
             except Exception as e:
                 FileWriter.toFile('error [' + str(e) + ']', 'log.txt')
         # если главная часть - глагол "являться" или похожий на него
@@ -42,19 +34,18 @@ class IsAParser(AbstractTemplateParser):
                 sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
                 not self.__getChildrenByToken__(sentence, {'lemma': 'часть'}):
             try:
-                subjs = [_ for _ in sentence.children if
-                         _.token['deprel'] == 'nsubj' and _.token['upostag'] == 'NOUN']
-                if len(subjs) > 0:
-                    subjs.extend([_ for _ in subjs[0].children if
-                                  _.token['deprel'] == 'conj' and subjs[0].token['upostag'] == _.token[
-                                      'upostag']])
-                obls = [_ for _ in sentence.children if _.token['deprel'] == 'obl']
-                if len(obls) > 0:
-                    obls.extend([_ for _ in obls[0].children if
-                                 _.token['deprel'] == 'conj' and obls[0].token['upostag'] == _.token[
-                                     'upostag']])
-                for s in subjs:
-                    for o in obls:
-                        FileWriter.toFile('IS-A: ' + s.token['lemma'] + '<->' + o.token['lemma'], 'log.txt')
+                # главная часть - существительное nsubj
+                concept1 = self.__getChildrenByToken__(sentence, {'deprel': 'nsubj'})
+                if concept1:
+                    # ... вместе с другими перечислениями
+                    concept1.extend(self.__getChildrenByToken__(concept1[0], {'deprel': 'conj'}))
+
+                concept2 = self.__getChildrenByToken__(sentence, {'deprel': 'obl'})
+                if concept2:
+                    concept2.extend(self.__getChildrenByToken__(concept1[0], {'deprel': 'conj'}))
+
+                for c1 in concept1:
+                    for c2 in concept2:
+                        FileWriter.toFile('IS-A: ' + c1.token['lemma'] + '<->' + c2.token['lemma'], 'log.txt')
             except Exception as e:
                 FileWriter.toFile('error [' + str(e) + ']', 'log.txt')
