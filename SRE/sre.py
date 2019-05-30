@@ -17,13 +17,18 @@ class SRE(object):
     def __evalTreeSentence__(self, sentenceRoot, indexSentence):
         print('Parse sentence ' + str(indexSentence) + '... ', end='')
         # FileWriter.toFile('[sentence ' + str(indexSentence) + '] ', 'log.txt', ' ')
-        templateParser = IsAParser(self.__srem__)
-        templateParser.parse(sentenceRoot)
+        templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
+        for className in templateParsers:
+            _class = globals()[className]
+            templateParser = _class(self.__srem__)
+            templateParser.parse(sentenceRoot)
+
         print('[OK]', end='\n')
 
     def analyze(self, filename, encoding='utf8'):
         error = ProcessingError()
         with open(filename, 'r', encoding=encoding) as file:
+            FileWriter.toFile('Analyzing file ' + filename + ':', 'log.txt')
             for index, line in enumerate(file, start=1):
                 processed_conllu = self.__pipeline__.process(line, error)
                 sentence_root = parse_tree(processed_conllu)[0]
