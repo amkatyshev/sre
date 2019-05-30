@@ -21,6 +21,9 @@ class WordModel(object):
                 return wordCache
         return False
 
+    def getModel(self):
+        return self.__model__
+
     def getSimilarWords(self, words, count=10, grammems={'INFN'}):
         wordInCache = self.__findWordInCache__(words)
         if wordInCache == False:
