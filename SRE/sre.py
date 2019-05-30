@@ -9,7 +9,7 @@ MODULE_DIR = os.path.dirname(__file__)
 
 
 class SRE(object):
-    def __init__(self, udModel=MODULE_DIR+'/russian.udpipe', wordModel=MODULE_DIR+'/ruwiki/wiki.model', encoding='utf8'):
+    def __init__(self, udModel=MODULE_DIR+'/rupipe/russian.udpipe', wordModel=MODULE_DIR+'/ruwiki/wiki.model'):
         self.__udmodel__ = Model.load(udModel)
         self.__pipeline__ = Pipeline(self.__udmodel__, 'horizontal', Pipeline.DEFAULT, Pipeline.DEFAULT, 'conllu')
         self.__srem__ = WordModel(wordModel)
