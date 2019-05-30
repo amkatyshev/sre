@@ -19,6 +19,13 @@ class AbstractTemplateParser:
                 result.append(child)
         return result
 
+    def __getFullConcept__(self, node):
+        fullConcept = node.token['lemma']
+        fullConceptMod = self.__getChildrenByToken__(node, {'deprel': 'nmod'})
+        if fullConceptMod:
+            fullConcept += ' ' + fullConceptMod[0].token['form']
+        return fullConcept
+
     @abstractmethod
     def parse(self, sentence):
         """Разбор предложения для данного шаблона"""
