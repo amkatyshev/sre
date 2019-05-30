@@ -48,14 +48,8 @@ class PartOfParser(AbstractTemplateParser):
                 concept2.extend(self.__getChildrenByToken__(concept2[0], {'deprel': 'conj'}))
 
             for c1 in concept1:
-                fullConcept1 = c1.token['lemma']
-                fullConcept1Mod = self.__getChildrenByToken__(c1, {'deprel': 'nmod'})
-                if fullConcept1Mod:
-                    fullConcept1 += ' ' + fullConcept1Mod[0].token['form']
+                fullConcept1 = self.__getFullConcept__(c1)
                 for c2 in concept2:
-                    fullConcept2 = c2.token['lemma']
-                    fullConcept2Mod = self.__getChildrenByToken__(c2, {'deprel': 'nmod'})
-                    if fullConcept2Mod:
-                        fullConcept2 += ' ' + fullConcept2Mod[0].token['form']
+                    fullConcept2 = self.__getFullConcept__(c2)
                     FileWriter.toFile('PART-OF: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
 

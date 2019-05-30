@@ -17,15 +17,9 @@ class IsAParser(AbstractTemplateParser):
 
                 # добавляем зависимости от главных существительных в виде существительных в родительном падеже
                 for c1 in concept1:
+                    fullConcept1 = self.__getFullConcept__(c1)
                     for c2 in concept2:
-                        fullConcept1 = c1.token['lemma']
-                        fullConcept1Mod = self.__getChildrenByToken__(c1, {'deprel': 'nmod'})
-                        if fullConcept1Mod:
-                            fullConcept1 += ' ' + fullConcept1Mod[0].token['form']
-                        fullConcept2 = c2.token['lemma']
-                        fullConcept2Mod = self.__getChildrenByToken__(c2, {'deprel': 'nmod'})
-                        if fullConcept2Mod:
-                            fullConcept2 += ' ' + fullConcept2Mod[0].token['form']
+                        fullConcept2 = self.__getFullConcept__(c2)
                         FileWriter.toFile('IS-A: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
             except Exception as e:
                 FileWriter.toFile('error [' + str(e) + ']', 'log.txt')
@@ -45,7 +39,9 @@ class IsAParser(AbstractTemplateParser):
                     concept2.extend(self.__getChildrenByToken__(concept1[0], {'deprel': 'conj'}))
 
                 for c1 in concept1:
+                    fullConcept1 = self.__getFullConcept__(c1)
                     for c2 in concept2:
-                        FileWriter.toFile('IS-A: ' + c1.token['lemma'] + '<->' + c2.token['lemma'], 'log.txt')
+                        fullConcept2 = self.__getFullConcept__(c2)
+                        FileWriter.toFile('IS-A: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
             except Exception as e:
                 FileWriter.toFile('error [' + str(e) + ']', 'log.txt')
