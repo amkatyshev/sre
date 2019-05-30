@@ -37,18 +37,15 @@ class PartOfParser(AbstractTemplateParser):
             obl = self.__getChildrenByToken__(sentence, {'deprel': 'obl'})
             if nsubj and nsubj[0].token['lemma'] in similarPartOfWords:
                 concept1 = self.__getChildrenByToken__(nsubj[0], {'deprel': 'nmod'})
-                if concept1:
-                    concept1.extend(self.__getChildrenByToken__(concept1[0], {'deprel': 'conj'}))
                 concept2 = obl
-                if concept2:
-                    concept2.extend(self.__getChildrenByToken__(concept2[0], {'deprel': 'conj'}))
             elif obl and obl[0].token['lemma'] in similarPartOfWords:
                 concept1 = nsubj
-                if concept1:
-                    concept1.extend(self.__getChildrenByToken__(concept1[0], {'deprel': 'conj'}))
                 concept2 = self.__getChildrenByToken__(obl[0], {'deprel': 'nmod'})
-                if concept2:
-                    concept2.extend(self.__getChildrenByToken__(concept2[0], {'deprel': 'conj'}))
+
+            if concept1:
+                concept1.extend(self.__getChildrenByToken__(concept1[0], {'deprel': 'conj'}))
+            if concept2:
+                concept2.extend(self.__getChildrenByToken__(concept2[0], {'deprel': 'conj'}))
 
             for c1 in concept1:
                 fullConcept1 = c1.token['lemma']
