@@ -6,7 +6,7 @@ class IsAParser(AbstractTemplateParser):
     def parse(self, sentence):
         upt_root = sentence.token['upostag']
         # если главная часть - существительное
-        if upt_root == 'NOUN':
+        if upt_root == 'NOUN' and sentence.token['lemma'] != 'часть':
             try:
                 # главная часть - существительное nsubj
                 subjs = [_ for _ in sentence.children if
@@ -40,7 +40,7 @@ class IsAParser(AbstractTemplateParser):
                 FileWriter.toFile('error [' + str(e) + ']', 'log.txt')
         # если главная часть - глагол "являться" или похожий на него
         elif upt_root == 'VERB' and sentence.token['lemma'] in self.__wordModel__.getSimilarWords(
-                ['являться', 'называться'], 10):
+                ['являться', 'называться'], {'INFN'}, 10):
             try:
                 subjs = [_ for _ in sentence.children if
                          _.token['deprel'] == 'nsubj' and _.token['upostag'] == 'NOUN']
