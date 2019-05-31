@@ -15,7 +15,6 @@ class Output(object):
             raise ValueError('Unknown output mode')
 
     def out(self, data):
-        print('Result:')
         if self.__mode__ == Output.TO_FILE:
             with open(self.__filename__, 'w', encoding='utf8') as file:
                 for type, list in data.items():

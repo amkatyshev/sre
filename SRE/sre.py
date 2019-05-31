@@ -59,6 +59,7 @@ class SRE(object):
         print('[OK]')
 
     def getFullResult(self, outputMode=Output.TO_FILE, filename='result.txt'):
+        print('Getting full result... ')
         out = Output(outputMode, filename)
         out.out(self.__result__.getData())
 
@@ -66,6 +67,7 @@ class SRE(object):
         templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
         availableTypes = [globals()[_].getTemplateName() for _ in templateParsers]
         if type in availableTypes:
+            print('Getting result by type ' + type + '... ')
             out = Output(outputMode, filename)
             out.out(self.__result__.getDataByType(type, concept))
         else:
