@@ -4,7 +4,7 @@ from SRE.TemplateParser import AbstractTemplateParser
 class PartOfParser(AbstractTemplateParser):
     def parse(self, sentence):
         result = []
-        similarPartOfWords = self.__wordModel__.getSimilarWords(['часть'], {'NOUN', 'inan', 'sing', 'nomn'}, 10)
+        similarPartOfWords = self.__wordModel__.getSimilarWords(['часть'], {'NOUN', 'nomn'}, 10)
         if sentence.token['lemma'] in similarPartOfWords:
             # главная часть - существительное nsubj
             concept1 = [_ for _ in sentence.children if _.token['deprel'] == 'nsubj']
