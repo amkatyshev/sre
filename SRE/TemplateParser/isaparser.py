@@ -2,7 +2,8 @@ from SRE.TemplateParser import AbstractTemplateParser
 
 
 class IsAParser(AbstractTemplateParser):
-    def getTemplate(self):
+    @staticmethod
+    def getTemplateName():
         return 'IS-A'
 
     def parse(self, sentence):

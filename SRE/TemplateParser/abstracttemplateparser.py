@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod, abstractproperty
+from abc import ABCMeta, abstractmethod
 
 
 class AbstractTemplateParser:
@@ -31,6 +31,7 @@ class AbstractTemplateParser:
     def parse(self, sentence):
         """Разбор предложения для данного шаблона"""
 
+    @staticmethod
     @abstractmethod
-    def getTemplate(self):
+    def getTemplateName():
         """Получение типа шаблона"""

@@ -2,7 +2,8 @@ from SRE.TemplateParser import AbstractTemplateParser
 
 
 class PartOfParser(AbstractTemplateParser):
-    def getTemplate(self):
+    @staticmethod
+    def getTemplateName():
         return 'PART-OF'
 
     def parse(self, sentence):
