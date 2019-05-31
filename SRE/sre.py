@@ -58,15 +58,15 @@ class SRE(object):
                 self.__evalTreeSentence__(themes, sentence_root)
         print('[OK]')
 
-    def getFullResult(self, output='result.txt'):
-        out = Output(output)
+    def getFullResult(self, outputMode=Output.TO_FILE, filename='result.txt'):
+        out = Output(outputMode, filename)
         out.out(self.__result__.getData())
 
-    def getResultByType(self, type, concept=None, output='result.txt'):
+    def getResultByType(self, type, concept=None, outputMode=Output.TO_FILE, filename='result.txt'):
         templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
         availableTypes = [globals()[_].getTemplateName() for _ in templateParsers]
         if type in availableTypes:
-            out = Output(output)
+            out = Output(outputMode, filename)
             out.out(self.__result__.getDataByType(type, concept))
         else:
             raise AttributeError('Unknown semantic type. Available types: ' + ', '.join(availableTypes))
