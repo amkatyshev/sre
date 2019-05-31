@@ -20,7 +20,8 @@ class Result(object):
             elif isinstance(concept, str):
                 result.setdefault(type, [])
                 for tuple in self.__data__[type]:
-                    if concept in tuple:
+                    conceptsString = ' '.join(tuple)
+                    if conceptsString.find(concept) > -1:
                         result.update({type: result.get(type) + [tuple]})
             else:
                 raise AttributeError('Concept must be str type or None')
