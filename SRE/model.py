@@ -1,4 +1,6 @@
 from gensim.models import Word2Vec, KeyedVectors
+from gensim.models.word2vec import LineSentence
+from gensim.utils import keep_vocab_item
 from pymorphy2 import MorphAnalyzer
 
 
@@ -10,6 +12,7 @@ class WordModel(object):
         else:
             model = Word2Vec.load(fileModel)
         self.__model__ = model
+        self.__userWords__ = []
         self.__cache__ = []
 
     def __mostSimilar__(self, words, topn=10):
@@ -23,6 +26,29 @@ class WordModel(object):
 
     def getModel(self):
         return self.__model__
+
+    def isTrueConcept(self, userWords, parserWord):
+        # if not self.__userWords__:
+        #     for word in userWords:
+        #         inflected = self.__morph__.parse(word)[0].inflect({'NOUN', 'sing', 'nomn'})
+        #         if inflected:
+        #             self.__userWords__.append(inflected.word)
+        #         else:
+        #             self.__userWords__.append(word)
+        # inflectedParserWord = self.__morph__.parse(parserWord)[0].inflect({'NOUN', 'sing', 'nomn'})
+        # if inflectedParserWord:
+        #     parserWord = inflectedParserWord.word
+        similarity = self.__model__.n_similarity([parserWord], userWords)
+        return similarity > 0.3
+
+    def trainFile(self, filename, encoding='utf8'):
+        text = open(filename, 'r', encoding=encoding)
+        lineSentence = LineSentence(text)
+        oldMinCount = self.__model__.min_count
+        self.__model__.min_count = 1
+        self.__model__.build_vocab(lineSentence, update=True)
+        self.__model__.min_count = oldMinCount
+        self.__model__.train(lineSentence, total_examples=self.__model__.corpus_count, epochs=self.__model__.epochs)
 
     def getSimilarWords(self, words, grammems, count=10):
         wordInCache = self.__findWordInCache__(words)
