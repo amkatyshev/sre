@@ -14,17 +14,15 @@ class Output(object):
     def out(self, data):
         if self.__mode__ == Output.TO_FILE:
             with open(self.__filename__, 'a', encoding='utf8') as file:
-                if isinstance(data, str):
-                    file.write(data + '\n')
-                else:
-                    for line in data:
-                        file.write(line + '\n')
+                for type, list in data.items():
+                    file.write(type + ' relation\n')
+                    for pair in list:
+                        file.write(' <-> '.join(pair) + '\n')
         elif self.__mode__ == Output.TO_SCREEN:
-            if isinstance(data, str):
-                print(data, end='\n')
-            else:
-                for line in data:
-                    print(line, end='\n')
+            for type, list in data.items():
+                print(type + ' relation\n')
+                for pair in list:
+                    print(' <-> '.join(pair) + '\n')
         else:
             raise ValueError('Unknown output mode')
 
