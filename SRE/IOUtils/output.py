@@ -15,12 +15,12 @@ class Output(object):
         if self.__mode__ == Output.TO_FILE:
             with open(self.__filename__, 'a', encoding='utf8') as file:
                 for type, list in data.items():
-                    file.write(type + ' relation\n')
+                    file.write('[' + type + ' relation]\n')
                     for pair in list:
                         file.write(' <-> '.join(pair) + '\n')
         elif self.__mode__ == Output.TO_SCREEN:
             for type, list in data.items():
-                print(type + ' relation\n')
+                print('[' + type + ' relation]\n')
                 for pair in list:
                     print(' <-> '.join(pair) + '\n')
         else:
