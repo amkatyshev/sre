@@ -2,6 +2,9 @@ from SRE.TemplateParser import AbstractTemplateParser
 
 
 class PartOfParser(AbstractTemplateParser):
+    def getTemplate(self):
+        return 'PART-OF'
+
     def parse(self, sentence):
         result = []
         similarPartOfWords = self.__wordModel__.getSimilarWords(['часть'], {'NOUN', 'nomn'}, 10)
@@ -21,7 +24,7 @@ class PartOfParser(AbstractTemplateParser):
                 fullConcept1 = self.__getFullConcept__(c1)
                 for c2 in concept2:
                     fullConcept2 = self.__getFullConcept__(c2)
-                    result.append('PART-OF: ' + fullConcept1 + '<->' + fullConcept2)
+                    result.append((fullConcept1, fullConcept2))
 
         elif sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
                 self.__getChildrenByToken__(sentence, {'lemma': 'часть'}):
@@ -45,7 +48,7 @@ class PartOfParser(AbstractTemplateParser):
                 fullConcept1 = self.__getFullConcept__(c1)
                 for c2 in concept2:
                     fullConcept2 = self.__getFullConcept__(c2)
-                    result.append('PART-OF: ' + fullConcept1 + '<->' + fullConcept2)
+                    result.append((fullConcept1, fullConcept2))
 
         return result
 

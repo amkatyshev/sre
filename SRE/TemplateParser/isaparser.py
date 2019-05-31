@@ -2,6 +2,9 @@ from SRE.TemplateParser import AbstractTemplateParser
 
 
 class IsAParser(AbstractTemplateParser):
+    def getTemplate(self):
+        return 'IS-A'
+
     def parse(self, sentence):
         result = []
         # если главная часть - существительное
@@ -20,9 +23,9 @@ class IsAParser(AbstractTemplateParser):
                     fullConcept1 = self.__getFullConcept__(c1)
                     for c2 in concept2:
                         fullConcept2 = self.__getFullConcept__(c2)
-                        result.append('IS-A: ' + fullConcept1 + '<->' + fullConcept2)
+                        result.append((fullConcept1, fullConcept2))
             except Exception as e:
-                return 'error [' + str(e) + ']'
+                raise Exception('Error with parsing IS-A template')
         # если главная часть - глагол "являться" или похожий на него
         elif sentence.token['upostag'] == 'VERB' and \
                 sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
@@ -42,8 +45,8 @@ class IsAParser(AbstractTemplateParser):
                     fullConcept1 = self.__getFullConcept__(c1)
                     for c2 in concept2:
                         fullConcept2 = self.__getFullConcept__(c2)
-                        result.append('IS-A: ' + fullConcept1 + '<->' + fullConcept2)
+                        result.append((fullConcept1, fullConcept2))
             except Exception as e:
-                return 'error [' + str(e) + ']'
+                raise Exception('Error with parsing IS-A template')
 
         return result

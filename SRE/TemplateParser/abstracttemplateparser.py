@@ -29,3 +29,7 @@ class AbstractTemplateParser:
     @abstractmethod
     def parse(self, sentence):
         """Разбор предложения для данного шаблона"""
+
+    @abstractmethod
+    def getTemplate(self):
+        """Получение типа шаблона"""
