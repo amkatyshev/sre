@@ -5,13 +5,9 @@ from pymorphy2 import MorphAnalyzer
 
 
 class WordModel(object):
-    def __init__(self, fileModel, isVector=False, binary=False):
+    def __init__(self, fileModel):
         self.__morph__ = MorphAnalyzer()
-        if isVector:
-            model = KeyedVectors.load_word2vec_format(fileModel, binary=binary, unicode_errors='ignore')
-        else:
-            model = Word2Vec.load(fileModel)
-        self.__model__ = model
+        self.__model__ = Word2Vec.load(fileModel)
         self.__userWords__ = []
         self.__cache__ = []
 
