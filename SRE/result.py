@@ -11,3 +11,7 @@ class Result(object):
 
     def getData(self):
         return self.__data__
+
+    def getDataByType(self, type):
+        if type in self.__data__:
+            return {type: self.__data__[type]}
