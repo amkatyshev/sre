@@ -62,12 +62,12 @@ class SRE(object):
         out = Output(output)
         out.out(self.__result__.getData())
 
-    def getResultByType(self, type, output='result.txt', concept=None):
+    def getResultByType(self, type, concept=None, output='result.txt'):
         templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
         availableTypes = [globals()[_].getTemplateName() for _ in templateParsers]
         if type in availableTypes:
             out = Output(output)
-            out.out(self.__result__.getDataByType(type))
+            out.out(self.__result__.getDataByType(type, concept))
         else:
             raise AttributeError('Unknown semantic type. Available types: ' + ', '.join(availableTypes))
 

@@ -12,6 +12,14 @@ class Result(object):
     def getData(self):
         return self.__data__
 
-    def getDataByType(self, type):
+    def getDataByType(self, type, concept=None):
+        result = {}
         if type in self.__data__:
-            return {type: self.__data__[type]}
+            if not concept:
+                result = {type: self.__data__[type]}
+            else:
+                result.setdefault(type, [])
+                for tuple in self.__data__[type]:
+                    if concept in tuple:
+                        result.update({type: result.get(type) + [tuple]})
+            return result
