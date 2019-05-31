@@ -42,12 +42,16 @@ class SRE(object):
     def analyze(self, themes, filename, encoding='utf8'):
         self.__checkerThemes__(themes)
         error = ProcessingError()
+        print('Updating model with text... ', end='')
         self.__srem__.trainFile(filename, encoding=encoding)
+        print('[OK]')
+        print('Parsing sentences... ', end='')
         with open(filename, 'r', encoding=encoding) as file:
             for index, line in enumerate(file, start=1):
                 processed_conllu = self.__pipeline__.process(line, error)
                 sentence_root = parse_tree(processed_conllu)[0]
                 self.__evalTreeSentence__(themes, sentence_root)
+        print('[OK]')
 
     def getFullResult(self, output='result.txt'):
         out = Output(output)
