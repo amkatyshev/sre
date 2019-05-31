@@ -15,11 +15,13 @@ class Result(object):
     def getDataByType(self, type, concept=None):
         result = {}
         if type in self.__data__:
-            if not concept:
+            if concept is None:
                 result = {type: self.__data__[type]}
-            else:
+            elif isinstance(concept, str):
                 result.setdefault(type, [])
                 for tuple in self.__data__[type]:
                     if concept in tuple:
                         result.update({type: result.get(type) + [tuple]})
+            else:
+                raise AttributeError('Concept must be str type or None')
             return result
