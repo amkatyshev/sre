@@ -33,7 +33,7 @@ class WordModel(object):
                 if len(finalWords) < count + len(words):
                     word_parse = self.__morph__.parse(wordInList[0])[0]
                     inflect = word_parse.inflect(grammems)
-                    if inflect is not None and inflect.normal_form not in finalWords:
+                    if inflect is not None and inflect.word not in finalWords:
                         finalWords.append(inflect.word)
             self.__cache__.append((words, finalWords))
             return finalWords
