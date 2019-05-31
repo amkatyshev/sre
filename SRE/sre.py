@@ -3,6 +3,7 @@ from conllu import parse_tree
 from SRE.IOUtils import Output
 from .TemplateParser import *
 from SRE import WordModel
+from SRE import Result
 import os
 
 MODULE_DIR = os.path.dirname(__file__)
@@ -18,7 +19,7 @@ class SRE(object):
             Pipeline.DEFAULT,
             'conllu')
         self.__srem__ = WordModel(wordModel)
-        self.__result__ = {}
+        self.__result__ = Result()
 
     def __evalTreeSentence__(self, sentenceRoot):
         templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
@@ -26,10 +27,8 @@ class SRE(object):
             _class = globals()[className]
             templateParser = _class(self.__srem__)
             templateValue = templateParser.getTemplate()
-            if templateValue not in self.__result__.keys():
-                self.__result__.setdefault(templateValue, [])
             parseSentenceResult = templateParser.parse(sentenceRoot)
-            self.__result__.update({templateValue: self.__result__.get(templateValue) + parseSentenceResult})
+            self.__result__.add({templateValue: parseSentenceResult})
 
     def analyze(self, filename, encoding='utf8'):
         error = ProcessingError()
@@ -41,7 +40,7 @@ class SRE(object):
 
     def getFullResult(self, output):
         out = Output(output)
-        out.out(self.__result__)
+        out.out(self.__result__.getData())
 
 
 
