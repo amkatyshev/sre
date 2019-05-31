@@ -38,6 +38,11 @@ class SRE(object):
             templateValue = _class.getTemplateName()
             parseSentenceResult = templateParser.parse(sentenceRoot)
             self.__result__.add({templateValue: parseSentenceResult})
+        conjRoots = [_ for _ in sentenceRoot.children if _.token['deprel'] == 'conj']
+        if conjRoots:
+            for conjRoot in conjRoots:
+                self.__evalTreeSentence__(themes, conjRoot)
+
 
     def analyze(self, themes, filename, encoding='utf8'):
         self.__checkerThemes__(themes)
