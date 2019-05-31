@@ -2,9 +2,10 @@ from abc import ABCMeta, abstractmethod, abstractproperty
 
 
 class AbstractTemplateParser:
-    def __init__(self, wordModel):
+    def __init__(self, themes, wordModel):
         __metaclass__ = ABCMeta
         self.__wordModel__ = wordModel
+        self.__themes__ = themes
 
     def __getChildrenByToken__(self, node, conditions={}):
         result = []
@@ -23,7 +24,7 @@ class AbstractTemplateParser:
         fullConcept = node.token['lemma']
         fullConceptMod = self.__getChildrenByToken__(node, {'deprel': 'nmod'})
         if fullConceptMod:
-            fullConcept += ' ' + fullConceptMod[0].token['form']
+            fullConcept += ' (' + fullConceptMod[0].token['form'] + ')'
         return fullConcept
 
     @abstractmethod
