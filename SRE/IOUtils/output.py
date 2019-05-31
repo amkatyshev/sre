@@ -14,7 +14,11 @@ class Output(object):
     def out(self, data):
         if self.__mode__ == Output.TO_FILE:
             with open(self.__filename__, 'a', encoding='utf8') as file:
-                file.write(data)
+                if isinstance(data, str):
+                    file.write(data + '\n')
+                else:
+                    for line in data:
+                        file.write(line + '\n')
         elif self.__mode__ == Output.TO_SCREEN:
             if isinstance(data, str):
                 print(data, end='\n')
