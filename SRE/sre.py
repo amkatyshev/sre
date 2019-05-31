@@ -26,7 +26,7 @@ class SRE(object):
         for className in templateParsers:
             _class = globals()[className]
             templateParser = _class(themes, self.__srem__)
-            templateValue = templateParser.getTemplate()
+            templateValue = _class.getTemplateName()
             parseSentenceResult = templateParser.parse(sentenceRoot)
             self.__result__.add({templateValue: parseSentenceResult})
 
@@ -39,9 +39,18 @@ class SRE(object):
                 sentence_root = parse_tree(processed_conllu)[0]
                 self.__evalTreeSentence__(themes, sentence_root)
 
-    def getFullResult(self, output):
+    def getFullResult(self, output='result.txt'):
         out = Output(output)
         out.out(self.__result__.getData())
+
+    def getResultByType(self, type, output='result.txt', concept=None):
+        templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
+        availableTypes = [globals()[_].getTemplateName() for _ in templateParsers]
+        if type in availableTypes:
+            out = Output(output)
+            out.out(self.__result__.getDataByType(type))
+        else:
+            raise AttributeError('Unknown semantic type. Available types: ' + ', '.join(availableTypes))
 
 
 
