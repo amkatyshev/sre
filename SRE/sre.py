@@ -21,6 +21,15 @@ class SRE(object):
         self.__srem__ = WordModel(wordModel)
         self.__result__ = Result()
 
+    def __checkerThemes__(self, themes):
+        if isinstance(themes, list):
+            for theme in themes:
+                if not isinstance(theme, str):
+                    raise TypeError('Themes list must contain only str objects')
+        else:
+            raise TypeError('Themes must be list of str')
+
+
     def __evalTreeSentence__(self, themes, sentenceRoot):
         templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
         for className in templateParsers:
@@ -31,6 +40,7 @@ class SRE(object):
             self.__result__.add({templateValue: parseSentenceResult})
 
     def analyze(self, themes, filename, encoding='utf8'):
+        self.__checkerThemes__(themes)
         error = ProcessingError()
         self.__srem__.trainFile(filename, encoding=encoding)
         with open(filename, 'r', encoding=encoding) as file:
