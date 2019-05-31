@@ -1,9 +1,9 @@
 from SRE.TemplateParser import AbstractTemplateParser
-from SRE.filewriter import FileWriter
 
 
 class IsAParser(AbstractTemplateParser):
     def parse(self, sentence):
+        result = []
         # если главная часть - существительное
         if sentence.token['upostag'] == 'NOUN' and sentence.token['lemma'] != 'часть':
             try:
@@ -20,9 +20,9 @@ class IsAParser(AbstractTemplateParser):
                     fullConcept1 = self.__getFullConcept__(c1)
                     for c2 in concept2:
                         fullConcept2 = self.__getFullConcept__(c2)
-                        FileWriter.toFile('IS-A: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
+                        result.append('IS-A: ' + fullConcept1 + '<->' + fullConcept2)
             except Exception as e:
-                FileWriter.toFile('error [' + str(e) + ']', 'log.txt')
+                return 'error [' + str(e) + ']'
         # если главная часть - глагол "являться" или похожий на него
         elif sentence.token['upostag'] == 'VERB' and \
                 sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
@@ -42,6 +42,8 @@ class IsAParser(AbstractTemplateParser):
                     fullConcept1 = self.__getFullConcept__(c1)
                     for c2 in concept2:
                         fullConcept2 = self.__getFullConcept__(c2)
-                        FileWriter.toFile('IS-A: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
+                        result.append('IS-A: ' + fullConcept1 + '<->' + fullConcept2)
             except Exception as e:
-                FileWriter.toFile('error [' + str(e) + ']', 'log.txt')
+                return 'error [' + str(e) + ']'
+
+        return result

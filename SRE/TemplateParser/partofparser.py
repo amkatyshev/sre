@@ -1,9 +1,9 @@
 from SRE.TemplateParser import AbstractTemplateParser
-from SRE.filewriter import FileWriter
 
 
 class PartOfParser(AbstractTemplateParser):
     def parse(self, sentence):
+        result = []
         similarPartOfWords = self.__wordModel__.getSimilarWords(['часть'], {'NOUN', 'inan', 'sing', 'nomn'}, 10)
         if sentence.token['lemma'] in similarPartOfWords:
             # главная часть - существительное nsubj
@@ -20,8 +20,8 @@ class PartOfParser(AbstractTemplateParser):
             for c1 in concept1:
                 fullConcept1 = self.__getFullConcept__(c1)
                 for c2 in concept2:
-                    fullConcept2 = self.__getFullConcept__(c1)
-                    FileWriter.toFile('PART-OF: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
+                    fullConcept2 = self.__getFullConcept__(c2)
+                    result.append('PART-OF: ' + fullConcept1 + '<->' + fullConcept2)
 
         elif sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
                 self.__getChildrenByToken__(sentence, {'lemma': 'часть'}):
@@ -45,5 +45,7 @@ class PartOfParser(AbstractTemplateParser):
                 fullConcept1 = self.__getFullConcept__(c1)
                 for c2 in concept2:
                     fullConcept2 = self.__getFullConcept__(c2)
-                    FileWriter.toFile('PART-OF: ' + fullConcept1 + '<->' + fullConcept2, 'log.txt')
+                    result.append('PART-OF: ' + fullConcept1 + '<->' + fullConcept2)
+
+        return result
 
