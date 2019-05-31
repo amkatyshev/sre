@@ -20,22 +20,26 @@ class SRE(object):
         self.__srem__ = WordModel(wordModel)
         self.__out__ = Output(output)
 
-    def __evalTreeSentence__(self, sentenceRoot, indexSentence):
+    def __evalTreeSentence__(self, sentenceRoot):
+        result = []
         templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
         for className in templateParsers:
             _class = globals()[className]
             templateParser = _class(self.__srem__)
-            result = templateParser.parse(sentenceRoot)
-            self.__out__.out(result)
+            parseSentenceResult = templateParser.parse(sentenceRoot)
+            result += parseSentenceResult
+        return result
 
     def analyze(self, filename, encoding='utf8'):
         error = ProcessingError()
+        result = []
         with open(filename, 'r', encoding=encoding) as file:
             self.__out__.out('Analyzing file ' + filename + ':')
             for index, line in enumerate(file, start=1):
                 processed_conllu = self.__pipeline__.process(line, error)
                 sentence_root = parse_tree(processed_conllu)[0]
-                self.__evalTreeSentence__(sentence_root, index)
+                result += self.__evalTreeSentence__(sentence_root)
+        self.__out__.out(result)
 
 
 
