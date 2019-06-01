@@ -58,15 +58,17 @@ def getVectors(filevectors):
 
 
 if __name__ == '__main__':
-    morph = MorphAnalyzer()
-    model = WordModel('ruwiki/wiki.model')
-    wordlist = model.__model__.wv.most_similar('является', topn=50)
-    main_word = morph.parse('является')[0]
-    final_words = [main_word.normal_form]
-    for word in wordlist:
-        word_parse = morph.parse(word[0])[0]
-        if 'VERB' in main_word.tag and word_parse.normal_form != main_word.normal_form and main_word.tag.person == word_parse.tag.person:
-            final_words.append(morph.parse(word[0])[0].normal_form)
-    pprint(final_words[:5])
+    model = Word2Vec.load('allwiki/wiki.ru.w2v.model')
+    model.wv.save_word2vec_format('allwiki/wiki.ru.vec', binary=False)
+    # morph = MorphAnalyzer()
+    # model = WordModel('ruwiki/wiki.model')
+    # wordlist = model.__model__.wv.most_similar('является', topn=50)
+    # main_word = morph.parse('является')[0]
+    # final_words = [main_word.normal_form]
+    # for word in wordlist:
+    #     word_parse = morph.parse(word[0])[0]
+    #     if 'VERB' in main_word.tag and word_parse.normal_form != main_word.normal_form and main_word.tag.person == word_parse.tag.person:
+    #         final_words.append(morph.parse(word[0])[0].normal_form)
+    # pprint(final_words[:5])
 
 
