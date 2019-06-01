@@ -9,9 +9,9 @@ import os
 
 start_time = time.time()
 
-sre = SRE()
+sre = SRE('SRE/rupipe/russian.udpipe', 'SRE/ruwiki/wiki.model')
 sre.analyze(['шаблон'], os.getcwd() + '/SRE/tests/testtext.txt')
-sre.getResultByType('IS-A', 123)
+sre.getFullResult(Output.TO_SCREEN)
 
 
 print(time.time() - start_time, 'execution time')
