@@ -29,7 +29,7 @@ class PartOfParser(AbstractTemplateParser):
                             self.__wordModel__.isTrueConcept(self.__themes__, c2.token['form']):
                         result.append((fullConcept1, fullConcept2))
 
-        elif sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
+        elif sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) or \
                 self.__getChildrenByToken__(sentence, {'lemma': 'часть'}):
             concept1 = []
             concept2 = []
@@ -51,7 +51,7 @@ class PartOfParser(AbstractTemplateParser):
                 fullConcept1 = self.__getFullConcept__(c1)
                 for c2 in concept2:
                     fullConcept2 = self.__getFullConcept__(c2)
-                    if self.__wordModel__.isTrueConcept(self.__themes__, c1.token['form']) and \
+                    if self.__wordModel__.isTrueConcept(self.__themes__, c1.token['form']) or \
                             self.__wordModel__.isTrueConcept(self.__themes__, c2.token['form']):
                         result.append((fullConcept1, fullConcept2))
 
