@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="SRE",
-    version="1.0.0",
+    version="1.0.3",
     author="Alexander Katyshev",
     author_email="amkatyshev97@gmail.com",
     description="Semantic Relation Extractor from russian texts",
@@ -17,8 +17,8 @@ setuptools.setup(
     install_requires=[
         "gensim",
         "ufal.udpipe",
-        "pymorphy2",
-        "conllu"
+        "pymorphy2>=0.8",
+        "conllu==1.3.1"
     ],
     classifiers=[
         "Programming Language :: Python :: 3"
