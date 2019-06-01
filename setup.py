@@ -1,4 +1,5 @@
 import setuptools
+import os
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -13,9 +14,6 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/amkatyshev/sre",
     packages=setuptools.find_packages(),
-    package_data = {
-        '': ['*.model', '*.npy', '*.udpipe'],
-    },
     install_requires=[
         "gensim",
         "ufal.udpipe",
