@@ -13,8 +13,17 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/amkatyshev/sre",
     packages=setuptools.find_packages(),
+    package_data = {
+        '': ['*.model', '*.npy', '*.udpipe'],
+    },
+    install_requires=[
+        "gensim",
+        "ufal.udpipe",
+        "pymorphy2",
+        "conllu"
+    ],
     classifiers=[
         "Programming Language :: Python :: 3"
-    ],
+    ]
 )
 
