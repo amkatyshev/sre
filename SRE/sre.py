@@ -12,12 +12,15 @@ MODULE_DIR = os.path.dirname(__file__)
 class SRE(object):
     def __init__(self, udmodel, wordModel):
         self.__udmodel__ = Model.load(udmodel)
+        if self.__udmodel__ is None:
+            raise ValueError('Unknown UDPipe model')
         self.__pipeline__ = Pipeline(
             self.__udmodel__,
             'horizontal',
             Pipeline.DEFAULT,
             Pipeline.DEFAULT,
             'conllu')
+        self.__uderror__ = ProcessingError()
         self.__srem__ = WordModel(wordModel)
         self.__result__ = Result()
 
@@ -28,7 +31,6 @@ class SRE(object):
                     raise TypeError('Themes list must contain only str objects')
         else:
             raise TypeError('Themes must be list of str')
-
 
     def __evalTreeSentence__(self, themes, sentenceRoot):
         templateParsers = [_class.__name__ for _class in AbstractTemplateParser.__subclasses__()]
@@ -43,17 +45,17 @@ class SRE(object):
             for conjRoot in conjRoots:
                 self.__evalTreeSentence__(themes, conjRoot)
 
-
     def analyze(self, themes, filename, encoding='utf8'):
         self.__checkerThemes__(themes)
-        error = ProcessingError()
         print('Updating model with text... ', end='')
         self.__srem__.trainFile(filename, encoding=encoding)
         print('[OK]')
         print('Parsing sentences... ', end='')
         with open(filename, 'r', encoding=encoding) as file:
             for index, line in enumerate(file, start=1):
-                processed_conllu = self.__pipeline__.process(line, error)
+                processed_conllu = self.__pipeline__.process(line, self.__uderror__)
+                if self.__uderror__.occurred():
+                    raise RuntimeError('UDPipe error: ' + self.__uderror__.message)
                 sentence_root = parse_tree(processed_conllu)[0]
                 self.__evalTreeSentence__(themes, sentence_root)
         print('[OK]')
