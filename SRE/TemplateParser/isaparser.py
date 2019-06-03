@@ -32,7 +32,8 @@ class IsAParser(AbstractTemplateParser):
         # если главная часть - глагол "являться" или похожий на него
         elif sentence.token['upostag'] == 'VERB' and \
                 sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
-                not self.__getChildrenByToken__(sentence, {'lemma': 'часть'}):
+                (not self.__getChildrenByToken__(sentence, {'lemma': 'часть'}) and
+                 not self.__getChildrenByToken__(sentence, {'lemma': 'не', 'upostag': 'PART'})):
             try:
                 # главная часть - существительное nsubj
                 concept1 = self.__getChildrenByToken__(sentence, {'deprel': 'nsubj'})

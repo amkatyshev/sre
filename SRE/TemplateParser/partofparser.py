@@ -29,8 +29,9 @@ class PartOfParser(AbstractTemplateParser):
                             self.__wordModel__.isTrueConcept(self.__themes__, c2.token['form']):
                         result.append((fullConcept1, fullConcept2))
 
-        elif sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) or \
-                self.__getChildrenByToken__(sentence, {'lemma': 'часть'}):
+        elif sentence.token['lemma'] in self.__wordModel__.getSimilarWords(['являться', 'называться'], {'INFN'}, 10) and \
+                self.__getChildrenByToken__(sentence, {'lemma': 'часть'}) and \
+                not self.__getChildrenByToken__(sentence, {'lemma': 'не', 'upostag': 'PART'}):
             concept1 = []
             concept2 = []
             nsubj = self.__getChildrenByToken__(sentence, {'deprel': 'nsubj'})
